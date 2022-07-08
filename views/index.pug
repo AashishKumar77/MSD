@@ -1,0 +1,102 @@
+extends layout
+block append head
+//- THIS IS THE HTML/PUG FOR THE HOME/INDEX PAGE.
+//- THIS ADDS TO LAYOUT.PUG WHEN RUN. 
+block content
+  .container-fluid
+    .row
+      .col-sm-2
+        a(href="https://madscientist.digital")
+          img#brand(src="/images/MSD.png", title="A service by Mad Scientist Digital", alt="Mad Scientist Digital")
+      .col-sm-8.text-center
+        h1 Meta Tag Analyser
+  .container-fluid
+    .row
+      .col-sm-3
+      .col-sm-6.text-center
+        form(action = "/", method = "POST")
+          .form-group
+            input#search-term-input.form-control(name='siteURL', type='text', placeholder='https://', autocomplete='off', value=(results != null ? results.url : '' ) )
+            small Enter a url to view analysed page results
+            .row
+              .col.text-center
+                button.btn.btn-light(type='submit') Submit
+      .col-sm-3
+    if(response)
+      .row
+        .col-sm-2
+        .col-sm-8
+          p(style="background:red;color:white")= response.error       
+        .col-sm-2
+    else if (results)
+      .row
+        .col-sm-2
+        .col-sm-8
+          if(results.titleError)
+            strong Error
+            p(style="background:red;color:white")= results.titleError 
+          else
+            strong Title
+            p= results.title  
+            strong Character Count 
+            if(results.titleLen > 65)
+              p(style="color:red")= results.titleLen
+            else
+              p(style="color:green")= results.titleLen
+            strong Relevancy Score
+            p= results.titleRelevancy
+            p.text-right
+              a.collapsed(data-toggle='collapse', href='#collapseTitleResults', role='button', aria-expanded='false', aria-controls='collapseTitleResults')
+                | Click to view results
+                div#collapseTitleResults.collapse(style='')
+                  .card.card-body
+                    table.table
+                      thead
+                        tr
+                          th(scope='col') Word
+                          th(scope='col') Found
+                      tbody
+                        each item in results.titleMap
+                          tr
+                            td= item.word
+                            td= item.found
+
+          if(results.descriptionError)
+            strong Error
+            p(style="background:red;color:white")= results.descriptionError 
+          else  
+            strong Description
+            p= results.description
+            strong Character Count
+            if(results.descriptionLen > 165)
+              p(style="color:red")= results.descriptionLen
+            else
+              p(style="color:green")= results.descriptionLen
+            strong Relevancy Score
+            p= results.descriptionRelevancy
+            p.text-right
+              a.collapsed(data-toggle='collapse', href='#collapseDescResults', role='button', aria-expanded='false', aria-controls='collapseDescResults')
+                | Click to view results
+                div#collapseDescResults.collapse(style='')
+                  .card.card-body
+                    table.table
+                      thead
+                        tr
+                          th(scope='col') Word
+                          th(scope='col') Found
+                      tbody
+                        each item in results.descriptionMap
+                          tr
+                            td= item.word
+                            td= item.found
+
+        .col-sm-2
+    else
+      .row.text-centered
+        .col-sm-3
+        .col-sm-6.text-center
+          
+          
+      
+
+
